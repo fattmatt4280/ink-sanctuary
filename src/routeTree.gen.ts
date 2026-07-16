@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TravelRouteImport } from './routes/travel'
+import { Route as StudioRouteImport } from './routes/studio'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
 import { Route as MerchRouteImport } from './routes/merch'
 import { Route as ContactRouteImport } from './routes/contact'
@@ -22,6 +23,11 @@ import { Route as ArtistsSlugRouteImport } from './routes/artists.$slug'
 const TravelRoute = TravelRouteImport.update({
   id: '/travel',
   path: '/travel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StudioRoute = StudioRouteImport.update({
+  id: '/studio',
+  path: '/studio',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PortfolioRoute = PortfolioRouteImport.update({
@@ -73,6 +79,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/merch': typeof MerchRoute
   '/portfolio': typeof PortfolioRoute
+  '/studio': typeof StudioRoute
   '/travel': typeof TravelRoute
   '/artists/$slug': typeof ArtistsSlugRoute
 }
@@ -84,6 +91,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/merch': typeof MerchRoute
   '/portfolio': typeof PortfolioRoute
+  '/studio': typeof StudioRoute
   '/travel': typeof TravelRoute
   '/artists/$slug': typeof ArtistsSlugRoute
 }
@@ -96,6 +104,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/merch': typeof MerchRoute
   '/portfolio': typeof PortfolioRoute
+  '/studio': typeof StudioRoute
   '/travel': typeof TravelRoute
   '/artists/$slug': typeof ArtistsSlugRoute
 }
@@ -109,6 +118,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/merch'
     | '/portfolio'
+    | '/studio'
     | '/travel'
     | '/artists/$slug'
   fileRoutesByTo: FileRoutesByTo
@@ -120,6 +130,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/merch'
     | '/portfolio'
+    | '/studio'
     | '/travel'
     | '/artists/$slug'
   id:
@@ -131,6 +142,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/merch'
     | '/portfolio'
+    | '/studio'
     | '/travel'
     | '/artists/$slug'
   fileRoutesById: FileRoutesById
@@ -143,6 +155,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   MerchRoute: typeof MerchRoute
   PortfolioRoute: typeof PortfolioRoute
+  StudioRoute: typeof StudioRoute
   TravelRoute: typeof TravelRoute
 }
 
@@ -153,6 +166,13 @@ declare module '@tanstack/react-router' {
       path: '/travel'
       fullPath: '/travel'
       preLoaderRoute: typeof TravelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/studio': {
+      id: '/studio'
+      path: '/studio'
+      fullPath: '/studio'
+      preLoaderRoute: typeof StudioRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/portfolio': {
@@ -233,6 +253,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   MerchRoute: MerchRoute,
   PortfolioRoute: PortfolioRoute,
+  StudioRoute: StudioRoute,
   TravelRoute: TravelRoute,
 }
 export const routeTree = rootRouteImport

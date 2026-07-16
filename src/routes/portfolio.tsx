@@ -1,33 +1,36 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { ImagePlaceholder } from "@/components/site/ImagePlaceholder";
-import { ARTISTS, PORTFOLIO, STYLES, type Style } from "@/lib/site-data";
+import { RemoteImage } from "@/components/site/RemoteImage";
+import { useSite } from "@/lib/site-context";
 
 export const Route = createFileRoute("/portfolio")({
   head: () => ({
     meta: [
-      { title: "Portfolio — [SHOP NAME]" },
-      {
-        name: "description",
-        content:
-          "The full archive of work from [SHOP NAME], Aurora, IL. Filter by artist and by style: fine line, black & grey, color realism, traditional, blackwork, illustrative.",
-      },
-      { property: "og:title", content: "Portfolio — [SHOP NAME]" },
+      { title: "Portfolio" },
+      { name: "description", content: "The full archive of work. Filter by artist and by style." },
     ],
   }),
   component: PortfolioPage,
 });
 
 function PortfolioPage() {
+  const { artists, portfolio } = useSite();
   const [artist, setArtist] = useState<string>("all");
-  const [style, setStyle] = useState<Style | "all">("all");
+  const [style, setStyle] = useState<string>("all");
+
+  const styles = useMemo(
+    () => Array.from(new Set(portfolio.map((p) => p.style).filter(Boolean))),
+    [portfolio],
+  );
 
   const items = useMemo(
     () =>
-      PORTFOLIO.filter(
-        (p) => (artist === "all" || p.artistSlug === artist) && (style === "all" || p.style === style),
+      portfolio.filter(
+        (p) =>
+          (artist === "all" || p.artist_id === artist || p.artist_slug === artist) &&
+          (style === "all" || p.style === style),
       ),
-    [artist, style],
+    [artist, style, portfolio],
   );
 
   return (
@@ -51,8 +54,8 @@ function PortfolioPage() {
               className="bg-background border border-border px-3 py-2 text-xs uppercase tracking-[0.2em] text-foreground"
             >
               <option value="all">All</option>
-              {ARTISTS.map((a) => (
-                <option key={a.slug} value={a.slug}>
+              {artists.map((a) => (
+                <option key={a.id} value={a.id}>
                   {a.name}
                 </option>
               ))}
@@ -69,7 +72,7 @@ function PortfolioPage() {
             >
               All Styles
             </button>
-            {STYLES.map((s) => (
+            {styles.map((s) => (
               <button
                 key={s}
                 onClick={() => setStyle(s)}
@@ -96,10 +99,10 @@ function PortfolioPage() {
       ) : (
         <section className="hairline-grid grid grid-cols-2 md:grid-cols-3">
           {items.map((p) => {
-            const a = ARTISTS.find((x) => x.slug === p.artistSlug);
+            const a = artists.find((x) => x.id === p.artist_id) ?? artists.find((x) => x.slug === p.artist_slug);
             return (
               <div key={p.id} className="group relative bg-background">
-                <ImagePlaceholder aspect="square" label={p.style} />
+                <RemoteImage path={p.image_url} aspect="square" label={p.style} />
                 <div className="absolute inset-x-0 bottom-0 p-4 flex items-end justify-between text-[10px] uppercase tracking-[0.2em] opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-t from-background to-transparent">
                   <span>{p.style}</span>
                   <span className="text-muted-foreground">{a?.name}</span>

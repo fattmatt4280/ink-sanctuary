@@ -1,17 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { ARTISTS, GUEST_SPOTS } from "@/lib/site-data";
+import { useSite } from "@/lib/site-context";
 
 export const Route = createFileRoute("/travel")({
   head: () => ({
     meta: [
-      { title: "Travel & Guest Spots — [SHOP NAME]" },
-      {
-        name: "description",
-        content:
-          "Upcoming conventions and guest spots from [SHOP NAME] artists — cities, dates, and host studios.",
-      },
-      { property: "og:title", content: "Travel & Guest Spots — [SHOP NAME]" },
+      { title: "Travel & Guest Spots" },
+      { name: "description", content: "Upcoming conventions and guest spots — cities, dates, and host studios." },
     ],
   }),
   component: TravelPage,
@@ -24,9 +19,10 @@ function fmt(dateStr: string) {
 
 function TravelPage() {
   const [tab, setTab] = useState<"upcoming" | "past">("upcoming");
-  const items = GUEST_SPOTS.filter((g) => g.status === tab).sort((a, b) =>
-    tab === "upcoming" ? a.start.localeCompare(b.start) : b.start.localeCompare(a.start),
-  );
+  const { guestSpots, artists } = useSite();
+  const items = guestSpots
+    .filter((g) => g.status === tab)
+    .sort((a, b) => (tab === "upcoming" ? a.start_date.localeCompare(b.start_date) : b.start_date.localeCompare(a.start_date)));
 
   return (
     <>
@@ -62,15 +58,15 @@ function TravelPage() {
       ) : (
         <ul className="divide-y divide-border">
           {items.map((g) => {
-            const artist = ARTISTS.find((a) => a.slug === g.artistSlug);
+            const artist = artists.find((a) => a.id === g.artist_id);
             return (
               <li key={g.id} className="px-6 md:px-12 py-8 grid gap-4 md:grid-cols-[220px_1fr_1fr_auto] md:items-baseline">
                 <div className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
-                  {fmt(g.start)} — {fmt(g.end)}
+                  {fmt(g.start_date)} — {fmt(g.end_date)}
                 </div>
                 <div className="font-serif italic text-2xl md:text-3xl">{g.city}</div>
                 <div className="text-sm text-muted-foreground">{g.venue}</div>
-                <div className="text-[10px] uppercase tracking-[0.25em]">{artist?.name}</div>
+                <div className="text-[10px] uppercase tracking-[0.25em]">{artist?.name ?? g.artist_name}</div>
               </li>
             );
           })}

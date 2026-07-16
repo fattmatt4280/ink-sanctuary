@@ -9,38 +9,194 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TravelRouteImport } from './routes/travel'
+import { Route as PortfolioRouteImport } from './routes/portfolio'
+import { Route as MerchRouteImport } from './routes/merch'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as BookingRouteImport } from './routes/booking'
+import { Route as ArtistsRouteImport } from './routes/artists'
+import { Route as AftercareRouteImport } from './routes/aftercare'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ArtistsSlugRouteImport } from './routes/artists.$slug'
 
+const TravelRoute = TravelRouteImport.update({
+  id: '/travel',
+  path: '/travel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortfolioRoute = PortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MerchRoute = MerchRouteImport.update({
+  id: '/merch',
+  path: '/merch',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookingRoute = BookingRouteImport.update({
+  id: '/booking',
+  path: '/booking',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArtistsRoute = ArtistsRouteImport.update({
+  id: '/artists',
+  path: '/artists',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AftercareRoute = AftercareRouteImport.update({
+  id: '/aftercare',
+  path: '/aftercare',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ArtistsSlugRoute = ArtistsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ArtistsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/aftercare': typeof AftercareRoute
+  '/artists': typeof ArtistsRouteWithChildren
+  '/booking': typeof BookingRoute
+  '/contact': typeof ContactRoute
+  '/merch': typeof MerchRoute
+  '/portfolio': typeof PortfolioRoute
+  '/travel': typeof TravelRoute
+  '/artists/$slug': typeof ArtistsSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/aftercare': typeof AftercareRoute
+  '/artists': typeof ArtistsRouteWithChildren
+  '/booking': typeof BookingRoute
+  '/contact': typeof ContactRoute
+  '/merch': typeof MerchRoute
+  '/portfolio': typeof PortfolioRoute
+  '/travel': typeof TravelRoute
+  '/artists/$slug': typeof ArtistsSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/aftercare': typeof AftercareRoute
+  '/artists': typeof ArtistsRouteWithChildren
+  '/booking': typeof BookingRoute
+  '/contact': typeof ContactRoute
+  '/merch': typeof MerchRoute
+  '/portfolio': typeof PortfolioRoute
+  '/travel': typeof TravelRoute
+  '/artists/$slug': typeof ArtistsSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/aftercare'
+    | '/artists'
+    | '/booking'
+    | '/contact'
+    | '/merch'
+    | '/portfolio'
+    | '/travel'
+    | '/artists/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/aftercare'
+    | '/artists'
+    | '/booking'
+    | '/contact'
+    | '/merch'
+    | '/portfolio'
+    | '/travel'
+    | '/artists/$slug'
+  id:
+    | '__root__'
+    | '/'
+    | '/aftercare'
+    | '/artists'
+    | '/booking'
+    | '/contact'
+    | '/merch'
+    | '/portfolio'
+    | '/travel'
+    | '/artists/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AftercareRoute: typeof AftercareRoute
+  ArtistsRoute: typeof ArtistsRouteWithChildren
+  BookingRoute: typeof BookingRoute
+  ContactRoute: typeof ContactRoute
+  MerchRoute: typeof MerchRoute
+  PortfolioRoute: typeof PortfolioRoute
+  TravelRoute: typeof TravelRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/travel': {
+      id: '/travel'
+      path: '/travel'
+      fullPath: '/travel'
+      preLoaderRoute: typeof TravelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portfolio': {
+      id: '/portfolio'
+      path: '/portfolio'
+      fullPath: '/portfolio'
+      preLoaderRoute: typeof PortfolioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/merch': {
+      id: '/merch'
+      path: '/merch'
+      fullPath: '/merch'
+      preLoaderRoute: typeof MerchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/booking': {
+      id: '/booking'
+      path: '/booking'
+      fullPath: '/booking'
+      preLoaderRoute: typeof BookingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/artists': {
+      id: '/artists'
+      path: '/artists'
+      fullPath: '/artists'
+      preLoaderRoute: typeof ArtistsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/aftercare': {
+      id: '/aftercare'
+      path: '/aftercare'
+      fullPath: '/aftercare'
+      preLoaderRoute: typeof AftercareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +204,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/artists/$slug': {
+      id: '/artists/$slug'
+      path: '/$slug'
+      fullPath: '/artists/$slug'
+      preLoaderRoute: typeof ArtistsSlugRouteImport
+      parentRoute: typeof ArtistsRoute
+    }
   }
 }
 
+interface ArtistsRouteChildren {
+  ArtistsSlugRoute: typeof ArtistsSlugRoute
+}
+
+const ArtistsRouteChildren: ArtistsRouteChildren = {
+  ArtistsSlugRoute: ArtistsSlugRoute,
+}
+
+const ArtistsRouteWithChildren =
+  ArtistsRoute._addFileChildren(ArtistsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AftercareRoute: AftercareRoute,
+  ArtistsRoute: ArtistsRouteWithChildren,
+  BookingRoute: BookingRoute,
+  ContactRoute: ContactRoute,
+  MerchRoute: MerchRoute,
+  PortfolioRoute: PortfolioRoute,
+  TravelRoute: TravelRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

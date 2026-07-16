@@ -79,7 +79,7 @@ function ContactPage() {
             <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-muted-foreground mb-4">
               Follow
             </div>
-            <SocialIcons size={5} />
+            <SocialIcons size="md" />
           </div>
         </div>
 

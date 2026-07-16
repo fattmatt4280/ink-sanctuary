@@ -1,5 +1,5 @@
 import { Instagram, Facebook } from "lucide-react";
-import { SHOP } from "@/lib/site-data";
+import { useSite } from "@/lib/site-context";
 
 // TikTok not in lucide default — use inline SVG
 function TikTokIcon({ className = "" }: { className?: string }) {
@@ -12,6 +12,7 @@ function TikTokIcon({ className = "" }: { className?: string }) {
 
 export function SocialIcons({ className = "", size = "sm" }: { className?: string; size?: "sm" | "md" }) {
   const s = size === "md" ? "size-5" : "size-4";
+  const { shop: SHOP } = useSite();
   return (
     <div className={`flex items-center gap-5 ${className}`}>
       <a

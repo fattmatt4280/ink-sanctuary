@@ -18,6 +18,7 @@ import { Route as BookingRouteImport } from './routes/booking'
 import { Route as ArtistsRouteImport } from './routes/artists'
 import { Route as AftercareRouteImport } from './routes/aftercare'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as StudioIndexRouteImport } from './routes/studio.index'
 import { Route as ArtistsSlugRouteImport } from './routes/artists.$slug'
 
 const TravelRoute = TravelRouteImport.update({
@@ -65,6 +66,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StudioIndexRoute = StudioIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => StudioRoute,
+} as any)
 const ArtistsSlugRoute = ArtistsSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -79,9 +85,10 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/merch': typeof MerchRoute
   '/portfolio': typeof PortfolioRoute
-  '/studio': typeof StudioRoute
+  '/studio': typeof StudioRouteWithChildren
   '/travel': typeof TravelRoute
   '/artists/$slug': typeof ArtistsSlugRoute
+  '/studio/': typeof StudioIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -91,9 +98,9 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/merch': typeof MerchRoute
   '/portfolio': typeof PortfolioRoute
-  '/studio': typeof StudioRoute
   '/travel': typeof TravelRoute
   '/artists/$slug': typeof ArtistsSlugRoute
+  '/studio': typeof StudioIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -104,9 +111,10 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/merch': typeof MerchRoute
   '/portfolio': typeof PortfolioRoute
-  '/studio': typeof StudioRoute
+  '/studio': typeof StudioRouteWithChildren
   '/travel': typeof TravelRoute
   '/artists/$slug': typeof ArtistsSlugRoute
+  '/studio/': typeof StudioIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -121,6 +129,7 @@ export interface FileRouteTypes {
     | '/studio'
     | '/travel'
     | '/artists/$slug'
+    | '/studio/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -130,9 +139,9 @@ export interface FileRouteTypes {
     | '/contact'
     | '/merch'
     | '/portfolio'
-    | '/studio'
     | '/travel'
     | '/artists/$slug'
+    | '/studio'
   id:
     | '__root__'
     | '/'
@@ -145,6 +154,7 @@ export interface FileRouteTypes {
     | '/studio'
     | '/travel'
     | '/artists/$slug'
+    | '/studio/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -155,7 +165,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   MerchRoute: typeof MerchRoute
   PortfolioRoute: typeof PortfolioRoute
-  StudioRoute: typeof StudioRoute
+  StudioRoute: typeof StudioRouteWithChildren
   TravelRoute: typeof TravelRoute
 }
 
@@ -224,6 +234,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/studio/': {
+      id: '/studio/'
+      path: '/'
+      fullPath: '/studio/'
+      preLoaderRoute: typeof StudioIndexRouteImport
+      parentRoute: typeof StudioRoute
+    }
     '/artists/$slug': {
       id: '/artists/$slug'
       path: '/$slug'
@@ -245,6 +262,17 @@ const ArtistsRouteChildren: ArtistsRouteChildren = {
 const ArtistsRouteWithChildren =
   ArtistsRoute._addFileChildren(ArtistsRouteChildren)
 
+interface StudioRouteChildren {
+  StudioIndexRoute: typeof StudioIndexRoute
+}
+
+const StudioRouteChildren: StudioRouteChildren = {
+  StudioIndexRoute: StudioIndexRoute,
+}
+
+const StudioRouteWithChildren =
+  StudioRoute._addFileChildren(StudioRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AftercareRoute: AftercareRoute,
@@ -253,7 +281,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   MerchRoute: MerchRoute,
   PortfolioRoute: PortfolioRoute,
-  StudioRoute: StudioRoute,
+  StudioRoute: StudioRouteWithChildren,
   TravelRoute: TravelRoute,
 }
 export const routeTree = rootRouteImport

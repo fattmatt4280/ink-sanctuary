@@ -13,6 +13,8 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
+import { SiteProvider } from "@/lib/site-context";
+import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -77,18 +79,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "[SHOP NAME] — Tattoo Studio · Aurora, IL" },
+      { title: "Tattoo Studio · Aurora, IL" },
       {
         name: "description",
         content:
-          "[SHOP NAME] is a fine-line, black & grey, and color realism tattoo studio at 1161 N Farnsworth Ave, Aurora, IL. Custom work by appointment. Walk-ins welcome.",
-      },
-      { name: "author", content: "[SHOP NAME]" },
-      { property: "og:title", content: "[SHOP NAME] — Tattoo Studio · Aurora, IL" },
-      {
-        property: "og:description",
-        content:
-          "Fine-line, black & grey, and color realism tattooing in Aurora, IL. Custom work by appointment.",
+          "A contemporary tattoo studio at 1161 N Farnsworth Ave, Aurora, IL. Custom work by appointment. Walk-ins welcome.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -129,13 +124,16 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="min-h-screen flex flex-col bg-background text-foreground">
-        <Header />
-        <main className="flex-1">
-          <Outlet />
-        </main>
-        <Footer />
-      </div>
+      <SiteProvider>
+        <div className="min-h-screen flex flex-col bg-background text-foreground">
+          <Header />
+          <main className="flex-1">
+            <Outlet />
+          </main>
+          <Footer />
+        </div>
+        <Toaster />
+      </SiteProvider>
     </QueryClientProvider>
   );
 }

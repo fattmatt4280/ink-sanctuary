@@ -1,7 +1,7 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import { SHOP } from "@/lib/site-data";
+import { useSite } from "@/lib/site-context";
 
 const NAV = [
   { to: "/", label: "Home" },
@@ -16,12 +16,15 @@ const NAV = [
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const { shop } = useSite();
+  const { pathname } = useLocation();
+  if (pathname.startsWith("/studio")) return null;
 
   return (
     <header className="sticky top-0 z-50 w-full bg-background/85 backdrop-blur-md border-b border-border">
       <div className="flex items-center justify-between px-6 py-4 md:hidden">
         <Link to="/" className="text-xs font-semibold tracking-[0.25em] uppercase">
-          {SHOP.name}
+          {shop.name}
         </Link>
         <button
           type="button"
@@ -33,10 +36,9 @@ export function Header() {
         </button>
       </div>
 
-      {/* Desktop */}
       <div className="hidden md:grid md:grid-cols-[1fr_auto_1fr] md:items-center px-8 py-5">
         <Link to="/" className="text-xs font-semibold tracking-[0.25em] uppercase">
-          {SHOP.name}
+          {shop.name}
         </Link>
         <nav className="flex gap-6 justify-center text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
           {NAV.slice(1).map((n) => (
@@ -60,7 +62,6 @@ export function Header() {
         </div>
       </div>
 
-      {/* Mobile drawer */}
       {open && (
         <nav className="md:hidden border-t border-border bg-background">
           <ul className="flex flex-col">

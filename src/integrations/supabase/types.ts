@@ -14,16 +14,191 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      artists: {
+        Row: {
+          bio: string
+          created_at: string
+          id: string
+          instagram: string
+          name: string
+          portrait_url: string | null
+          slug: string
+          sort_order: number
+          specialties: string[]
+          updated_at: string
+        }
+        Insert: {
+          bio?: string
+          created_at?: string
+          id?: string
+          instagram?: string
+          name: string
+          portrait_url?: string | null
+          slug: string
+          sort_order?: number
+          specialties?: string[]
+          updated_at?: string
+        }
+        Update: {
+          bio?: string
+          created_at?: string
+          id?: string
+          instagram?: string
+          name?: string
+          portrait_url?: string | null
+          slug?: string
+          sort_order?: number
+          specialties?: string[]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      guest_spots: {
+        Row: {
+          artist_id: string | null
+          city: string
+          created_at: string
+          end_date: string
+          id: string
+          sort_order: number
+          start_date: string
+          status: string
+          updated_at: string
+          venue: string
+        }
+        Insert: {
+          artist_id?: string | null
+          city: string
+          created_at?: string
+          end_date: string
+          id?: string
+          sort_order?: number
+          start_date: string
+          status?: string
+          updated_at?: string
+          venue?: string
+        }
+        Update: {
+          artist_id?: string | null
+          city?: string
+          created_at?: string
+          end_date?: string
+          id?: string
+          sort_order?: number
+          start_date?: string
+          status?: string
+          updated_at?: string
+          venue?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "guest_spots_artist_id_fkey"
+            columns: ["artist_id"]
+            isOneToOne: false
+            referencedRelation: "artists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      portfolio_items: {
+        Row: {
+          artist_id: string | null
+          aspect: string
+          caption: string
+          created_at: string
+          id: string
+          image_url: string
+          sort_order: number
+          style: string
+          updated_at: string
+        }
+        Insert: {
+          artist_id?: string | null
+          aspect?: string
+          caption?: string
+          created_at?: string
+          id?: string
+          image_url: string
+          sort_order?: number
+          style?: string
+          updated_at?: string
+        }
+        Update: {
+          artist_id?: string | null
+          aspect?: string
+          caption?: string
+          created_at?: string
+          id?: string
+          image_url?: string
+          sort_order?: number
+          style?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "portfolio_items_artist_id_fkey"
+            columns: ["artist_id"]
+            isOneToOne: false
+            referencedRelation: "artists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      site_content: {
+        Row: {
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value?: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_admin: { Args: never; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +325,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const

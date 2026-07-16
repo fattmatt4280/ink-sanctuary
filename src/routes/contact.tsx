@@ -1,24 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SHOP } from "@/lib/site-data";
+import { useSite } from "@/lib/site-context";
 import { SocialIcons } from "@/components/site/SocialIcons";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact — [SHOP NAME]" },
-      {
-        name: "description",
-        content:
-          "Visit [SHOP NAME] at 1161 N Farnsworth Ave, Aurora, IL 60505. Hours, phone, email, and directions.",
-      },
-      { property: "og:title", content: "Contact — [SHOP NAME]" },
+      { title: "Contact" },
+      { name: "description", content: "Address, hours, phone, and directions." },
     ],
   }),
   component: ContactPage,
 });
 
 function ContactPage() {
-  const mapQuery = encodeURIComponent(`${SHOP.address1}, ${SHOP.address2}`);
+  const { shop } = useSite();
+  const mapQuery = encodeURIComponent(`${shop.address1}, ${shop.address2}`);
   return (
     <>
       <section className="px-6 md:px-12 pt-20 md:pt-28 pb-16 border-b border-border">
@@ -26,7 +22,7 @@ function ContactPage() {
           Visit
         </div>
         <h1 className="font-serif italic text-5xl md:text-6xl max-w-[16ch] leading-[0.95]">
-          {SHOP.address1}. Aurora, Illinois.
+          {shop.address1}. Aurora, Illinois.
         </h1>
       </section>
 
@@ -37,9 +33,9 @@ function ContactPage() {
               Address
             </div>
             <address className="not-italic font-serif italic text-2xl leading-snug">
-              {SHOP.address1}
+              {shop.address1}
               <br />
-              {SHOP.address2}
+              {shop.address2}
             </address>
           </div>
 
@@ -49,13 +45,13 @@ function ContactPage() {
             </div>
             <div className="space-y-2 text-lg">
               <div>
-                <a href={`tel:${SHOP.phone}`} className="hover:text-muted-foreground">
-                  {SHOP.phone}
+                <a href={`tel:${shop.phone}`} className="hover:text-muted-foreground">
+                  {shop.phone}
                 </a>
               </div>
               <div>
-                <a href={`mailto:${SHOP.email}`} className="hover:text-muted-foreground">
-                  {SHOP.email}
+                <a href={`mailto:${shop.email}`} className="hover:text-muted-foreground">
+                  {shop.email}
                 </a>
               </div>
             </div>
@@ -66,7 +62,7 @@ function ContactPage() {
               Hours
             </div>
             <ul className="space-y-2 text-base">
-              {SHOP.hours.map((h) => (
+              {shop.hours.map((h) => (
                 <li key={h.day} className="flex justify-between gap-8 max-w-xs">
                   <span className="text-muted-foreground">{h.day}</span>
                   <span>{h.hours}</span>

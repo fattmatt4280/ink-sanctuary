@@ -10,8 +10,8 @@ function TikTokIcon({ className = "" }: { className?: string }) {
   );
 }
 
-export function SocialIcons({ className = "", size = 4 }: { className?: string; size?: number }) {
-  const s = `size-${size}`;
+export function SocialIcons({ className = "", size = "sm" }: { className?: string; size?: "sm" | "md" }) {
+  const s = size === "md" ? "size-5" : "size-4";
   return (
     <div className={`flex items-center gap-5 ${className}`}>
       <a

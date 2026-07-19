@@ -14,6 +14,129 @@ export type Database = {
   }
   public: {
     Tables: {
+      consent_forms: {
+        Row: {
+          artist_name: string
+          client_name: string
+          confirms_18_plus: boolean
+          confirms_accurate_health_info: boolean
+          confirms_not_impaired: boolean
+          consents_to_procedure: boolean
+          created_at: string
+          date_of_birth: string
+          email: string
+          emergency_contact_name: string
+          emergency_contact_phone: string
+          health_conditions: string[]
+          health_notes: string
+          id: string
+          phone: string
+          placement: string
+          signature_date: string
+          signature_name: string
+          tattoo_description: string
+          understands_aftercare: boolean
+          understands_risks: boolean
+        }
+        Insert: {
+          artist_name?: string
+          client_name: string
+          confirms_18_plus: boolean
+          confirms_accurate_health_info: boolean
+          confirms_not_impaired: boolean
+          consents_to_procedure: boolean
+          created_at?: string
+          date_of_birth: string
+          email?: string
+          emergency_contact_name?: string
+          emergency_contact_phone?: string
+          health_conditions?: string[]
+          health_notes?: string
+          id?: string
+          phone?: string
+          placement?: string
+          signature_date?: string
+          signature_name: string
+          tattoo_description?: string
+          understands_aftercare: boolean
+          understands_risks: boolean
+        }
+        Update: {
+          artist_name?: string
+          client_name?: string
+          confirms_18_plus?: boolean
+          confirms_accurate_health_info?: boolean
+          confirms_not_impaired?: boolean
+          consents_to_procedure?: boolean
+          created_at?: string
+          date_of_birth?: string
+          email?: string
+          emergency_contact_name?: string
+          emergency_contact_phone?: string
+          health_conditions?: string[]
+          health_notes?: string
+          id?: string
+          phone?: string
+          placement?: string
+          signature_date?: string
+          signature_name?: string
+          tattoo_description?: string
+          understands_aftercare?: boolean
+          understands_risks?: boolean
+        }
+        Relationships: []
+      }
+      consultation_requests: {
+        Row: {
+          budget_range: string
+          created_at: string
+          email: string
+          id: string
+          name: string
+          notes: string
+          phone: string
+          placement: string
+          preferred_artist: string
+          preferred_dates: string
+          size_estimate: string
+          status: string
+          tattoo_idea: string
+          updated_at: string
+        }
+        Insert: {
+          budget_range?: string
+          created_at?: string
+          email: string
+          id?: string
+          name: string
+          notes?: string
+          phone?: string
+          placement?: string
+          preferred_artist?: string
+          preferred_dates?: string
+          size_estimate?: string
+          status?: string
+          tattoo_idea: string
+          updated_at?: string
+        }
+        Update: {
+          budget_range?: string
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          notes?: string
+          phone?: string
+          placement?: string
+          preferred_artist?: string
+          preferred_dates?: string
+          size_estimate?: string
+          status?: string
+          tattoo_idea?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       artists: {
         Row: {
           bio: string

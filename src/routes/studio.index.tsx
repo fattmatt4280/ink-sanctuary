@@ -862,6 +862,135 @@ function SimpleList({ label, items, onChange }: { label: string; items: string[]
   );
 }
 
+function SubmissionsTab() {
+  const [consultations, setConsultations] = useState<any[] | null>(null);
+  const [consents, setConsents] = useState<any[] | null>(null);
+  const [expanded, setExpanded] = useState<string | null>(null);
+
+  async function load() {
+    const [c, k] = await Promise.all([
+      supabase.from("consultation_requests").select("*").order("created_at", { ascending: false }),
+      supabase.from("consent_forms").select("*").order("created_at", { ascending: false }),
+    ]);
+    if (c.error) toast.error(c.error.message);
+    if (k.error) toast.error(k.error.message);
+    setConsultations(c.data ?? []);
+    setConsents(k.data ?? []);
+  }
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  async function setStatus(id: string, status: string) {
+    const { error } = await supabase.from("consultation_requests").update({ status }).eq("id", id);
+    if (error) return toast.error(error.message);
+    load();
+  }
+
+  async function removeConsultation(id: string) {
+    const { error } = await supabase.from("consultation_requests").delete().eq("id", id);
+    if (error) return toast.error(error.message);
+    load();
+  }
+
+  async function removeConsent(id: string) {
+    const { error } = await supabase.from("consent_forms").delete().eq("id", id);
+    if (error) return toast.error(error.message);
+    load();
+  }
+
+  if (!consultations || !consents) {
+    return <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground">Loading…</div>;
+  }
+
+  return (
+    <div className="grid gap-12 max-w-4xl">
+      <div>
+        <h2 className="font-serif italic text-2xl mb-4">Consultation requests</h2>
+        {consultations.length === 0 && (
+          <p className="text-sm text-muted-foreground">No requests yet.</p>
+        )}
+        <div className="grid gap-3">
+          {consultations.map((r) => (
+            <div key={r.id} className="border border-border p-4 grid gap-2">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="font-medium">{r.name} <span className="text-muted-foreground text-sm">— {r.email}{r.phone ? ` — ${r.phone}` : ""}</span></div>
+                <div className="flex items-center gap-2">
+                  <select
+                    value={r.status}
+                    onChange={(e) => setStatus(r.id, e.target.value)}
+                    className="bg-background border border-border px-2 py-1 text-[10px] uppercase tracking-[0.2em]"
+                  >
+                    <option value="new">New</option>
+                    <option value="contacted">Contacted</option>
+                    <option value="booked">Booked</option>
+                    <option value="archived">Archived</option>
+                  </select>
+                  <Button variant="danger" onClick={() => removeConsultation(r.id)}>Delete</Button>
+                </div>
+              </div>
+              <div className="text-sm text-muted-foreground">
+                {r.preferred_artist && <>Artist: {r.preferred_artist} · </>}
+                {r.placement && <>Placement: {r.placement} · </>}
+                {r.size_estimate && <>Size: {r.size_estimate} · </>}
+                {r.budget_range && <>Budget: {r.budget_range} · </>}
+                {r.preferred_dates && <>Dates: {r.preferred_dates}</>}
+              </div>
+              <p className="text-sm">{r.tattoo_idea}</p>
+              {r.notes && <p className="text-sm text-muted-foreground">Notes: {r.notes}</p>}
+              <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                {new Date(r.created_at).toLocaleString()}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <h2 className="font-serif italic text-2xl mb-4">Consent forms</h2>
+        {consents.length === 0 && (
+          <p className="text-sm text-muted-foreground">No consent forms yet.</p>
+        )}
+        <div className="grid gap-3">
+          {consents.map((r) => (
+            <div key={r.id} className="border border-border p-4 grid gap-2">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="font-medium">
+                  {r.client_name} <span className="text-muted-foreground text-sm">— DOB {r.date_of_birth}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button variant="secondary" onClick={() => setExpanded(expanded === r.id ? null : r.id)}>
+                    {expanded === r.id ? "Hide" : "View"}
+                  </Button>
+                  <Button variant="danger" onClick={() => removeConsent(r.id)}>Delete</Button>
+                </div>
+              </div>
+              <div className="text-sm text-muted-foreground">
+                {r.artist_name && <>Artist: {r.artist_name} · </>}
+                {r.placement && <>Placement: {r.placement} · </>}
+                Signed {r.signature_date} as "{r.signature_name}"
+              </div>
+              {expanded === r.id && (
+                <div className="grid gap-2 text-sm border-t border-border pt-3 mt-1">
+                  <div>Contact: {r.phone} · {r.email}</div>
+                  <div>Emergency contact: {r.emergency_contact_name} — {r.emergency_contact_phone}</div>
+                  <div>Tattoo: {r.tattoo_description}</div>
+                  <div>Health conditions: {r.health_conditions?.length ? r.health_conditions.join(", ") : "None disclosed"}</div>
+                  {r.health_notes && <div>Health notes: {r.health_notes}</div>}
+                </div>
+              )}
+              <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                Submitted {new Date(r.created_at).toLocaleString()}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ------------------------------- Root ------------------------------- */
 
 function StudioHome() {
@@ -873,6 +1002,7 @@ function StudioHome() {
       { v: "portfolio", label: "Portfolio", el: <PortfolioTab /> },
       { v: "travel", label: "Travel", el: <TravelTab /> },
       { v: "aftercare", label: "Aftercare", el: <AftercareTab /> },
+      { v: "submissions", label: "Submissions", el: <SubmissionsTab /> },
     ],
     [],
   );

@@ -1,10 +1,15 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
+import { toast } from "sonner";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { supabase } from "@/integrations/supabase/client";
+import { useSite } from "@/lib/site-context";
+import { TextField, TextAreaField, SelectField } from "@/components/site/FormFields";
 
 export const Route = createFileRoute("/booking")({
   head: () => ({
@@ -46,24 +51,11 @@ function BookingPage() {
         </div>
       </section>
 
-      {/* Booking embed placeholder */}
-      <section className="px-6 md:px-8 py-16">
+      <section className="px-6 md:px-12 py-16">
         <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-muted-foreground mb-6">
           Schedule
         </div>
-        <div
-          className="border border-dashed border-border p-12 min-h-[480px] grid place-items-center text-center"
-          data-embed-slot="booking"
-        >
-          <div className="max-w-md">
-            <div className="font-serif italic text-2xl mb-4">[BOOKING EMBED]</div>
-            <p className="text-sm text-muted-foreground">
-              Drop in your Square, Boulevard, Calendly, or custom booking widget here.
-              Replace this block with an <code className="text-foreground">&lt;iframe&gt;</code> or
-              provider script — the surrounding layout will hold.
-            </p>
-          </div>
-        </div>
+        <ConsultationForm />
       </section>
 
       {/* Deposit / policy */}
@@ -110,7 +102,12 @@ function BookingPage() {
                 Age & Consent
               </AccordionTrigger>
               <AccordionContent className="text-muted-foreground">
-                Clients must be 18+ with a valid photo ID. No exceptions.
+                Clients must be 18+ with a valid photo ID. No exceptions. Every client completes
+                a{" "}
+                <Link to="/consent" className="underline hover:text-foreground">
+                  digital consent form
+                </Link>{" "}
+                before their session.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="touchup">
@@ -126,5 +123,87 @@ function BookingPage() {
         </div>
       </section>
     </>
+  );
+}
+
+function ConsultationForm() {
+  const { artists } = useSite();
+  const [submitted, setSubmitted] = useState(false);
+  const [busy, setBusy] = useState(false);
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [preferredArtist, setPreferredArtist] = useState("");
+  const [tattooIdea, setTattooIdea] = useState("");
+  const [placement, setPlacement] = useState("");
+  const [sizeEstimate, setSizeEstimate] = useState("");
+  const [budgetRange, setBudgetRange] = useState("");
+  const [preferredDates, setPreferredDates] = useState("");
+  const [notes, setNotes] = useState("");
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    try {
+      const { error } = await supabase.from("consultation_requests").insert({
+        name,
+        email,
+        phone,
+        preferred_artist: preferredArtist,
+        tattoo_idea: tattooIdea,
+        placement,
+        size_estimate: sizeEstimate,
+        budget_range: budgetRange,
+        preferred_dates: preferredDates,
+        notes,
+      });
+      if (error) throw error;
+      setSubmitted(true);
+    } catch (err: any) {
+      toast.error(err.message ?? "Something went wrong. Please try again.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  if (submitted) {
+    return (
+      <div className="border border-border p-12 text-center">
+        <div className="font-serif italic text-3xl mb-4">Request sent.</div>
+        <p className="text-muted-foreground max-w-md mx-auto">
+          We'll review your idea and follow up by email or phone to schedule your consultation.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="grid gap-8 max-w-2xl">
+      <div className="grid md:grid-cols-2 gap-6">
+        <TextField label="Name" required value={name} onChange={(e) => setName(e.target.value)} />
+        <TextField label="Email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+        <TextField label="Phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />
+        <SelectField label="Preferred artist" value={preferredArtist} onChange={(e) => setPreferredArtist(e.target.value)}>
+          <option value="">No preference</option>
+          {artists.map((a) => (
+            <option key={a.id} value={a.name}>{a.name}</option>
+          ))}
+        </SelectField>
+        <TextField label="Placement" placeholder="e.g. left forearm" value={placement} onChange={(e) => setPlacement(e.target.value)} />
+        <TextField label="Approximate size" placeholder="e.g. palm-sized" value={sizeEstimate} onChange={(e) => setSizeEstimate(e.target.value)} />
+        <TextField label="Budget range" placeholder="e.g. $300–500" value={budgetRange} onChange={(e) => setBudgetRange(e.target.value)} />
+        <TextField label="Preferred dates" placeholder="e.g. weekday afternoons in [MONTH]" value={preferredDates} onChange={(e) => setPreferredDates(e.target.value)} />
+      </div>
+      <TextAreaField label="Describe your tattoo idea" required value={tattooIdea} onChange={(e) => setTattooIdea(e.target.value)} />
+      <TextAreaField label="Anything else we should know? (optional)" value={notes} onChange={(e) => setNotes(e.target.value)} />
+      <button
+        type="submit"
+        disabled={busy}
+        className="justify-self-start bg-foreground text-background px-8 py-4 text-sm uppercase tracking-[0.25em] disabled:opacity-50"
+      >
+        {busy ? "Sending…" : "Request consultation"}
+      </button>
+    </form>
   );
 }

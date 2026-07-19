@@ -154,20 +154,20 @@ export const GUEST_SPOTS: GuestSpot[] = [
 
 export const AFTERCARE_STEPS = [
   {
-    title: "First 24 Hours",
-    body: "Leave the initial bandage on for 2–4 hours. Wash gently with unscented soap and lukewarm water. Pat dry with a clean paper towel. Do not re-bandage unless instructed.",
+    title: "Days 1 — 5",
+    body: "Leave the dermal water-resistant bandage on for 3–5 days. It's designed to stay in place through showers — don't peel it back early or re-bandage on your own.",
   },
   {
-    title: "Days 2 — 5",
-    body: "Wash twice daily. Apply a thin layer of recommended ointment. The tattoo should feel like a light sunburn — never soaked or slick.",
+    title: "Bandage Removal",
+    body: "Remove the bandage in the shower and wash the tattoo thoroughly with unscented soap under warm water. After your shower, pat dry with a clean towel or, preferably, a paper towel — then let it air dry for 30 minutes before applying anything.",
   },
   {
-    title: "Days 6 — 14",
-    body: "Switch to unscented lotion as peeling begins. Do not pick or scratch. Flaking is normal — let it fall off on its own.",
+    title: "Week 1",
+    body: "Apply a thin layer of Blue Dream Budder (or your preferred aftercare) 3–4 times a day. The tattoo should feel light and hydrated — never soaked or slick.",
   },
   {
-    title: "Weeks 3 — 6",
-    body: "Full healing continues under the surface. Keep moisturized. Avoid direct sun. Once fully healed, apply SPF 50 to preserve the work.",
+    title: "Week 2 and On",
+    body: "Begin tapering off usage after the first week as the skin finishes healing. Keep moisturized, avoid direct sun, and once fully healed, apply SPF 50 to preserve the work.",
   },
 ];
 
@@ -186,9 +186,9 @@ export const AFTERCARE_DONTS = [
 ];
 
 export const AFTERCARE_PRODUCTS = [
-  { name: "Aquaphor Healing Ointment", note: "Thin layer, days 2–5" },
+  { name: "Dermal Water-Resistant Bandage", note: "Worn 3–5 days" },
+  { name: "Blue Dream Budder", note: "3–4x daily, first week" },
   { name: "Dr. Bronner's Unscented", note: "Gentle wash" },
-  { name: "Lubriderm / Cetaphil", note: "Unscented daily lotion" },
   { name: "SPF 50 Mineral", note: "Long-term protection" },
 ];
 

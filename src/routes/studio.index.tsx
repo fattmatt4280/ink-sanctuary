@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { uploadImage, resolveImageUrl, deleteImage } from "@/lib/storage";
+import { getIdPhotoUrl } from "@/lib/idPhotos";
 import { useSite } from "@/lib/site-context";
 
 export const Route = createFileRoute("/studio/")({
@@ -862,6 +863,29 @@ function SimpleList({ label, items, onChange }: { label: string; items: string[]
   );
 }
 
+function IdPhotoViewer({ path }: { path: string }) {
+  const [url, setUrl] = useState<string | null>(null);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    if (!path) return;
+    getIdPhotoUrl(path).then((u) => (u ? setUrl(u) : setError(true)));
+  }, [path]);
+
+  if (!path) return <div>ID photo: none on file</div>;
+  if (error) return <div>ID photo: failed to load</div>;
+  if (!url) return <div>ID photo: loading…</div>;
+
+  return (
+    <div>
+      <div className="mb-2">ID photo:</div>
+      <a href={url} target="_blank" rel="noreferrer">
+        <img src={url} alt="Client ID" className="max-w-xs border border-border" />
+      </a>
+    </div>
+  );
+}
+
 function SubmissionsTab() {
   const [consultations, setConsultations] = useState<any[] | null>(null);
   const [consents, setConsents] = useState<any[] | null>(null);
@@ -978,6 +1002,7 @@ function SubmissionsTab() {
                   <div>Tattoo: {r.tattoo_description}</div>
                   <div>Health conditions: {r.health_conditions?.length ? r.health_conditions.join(", ") : "None disclosed"}</div>
                   {r.health_notes && <div>Health notes: {r.health_notes}</div>}
+                  <IdPhotoViewer path={r.id_photo_path} />
                 </div>
               )}
               <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">

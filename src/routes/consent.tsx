@@ -1,8 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useSite } from "@/lib/site-context";
+import { uploadIdPhoto } from "@/lib/idPhotos";
 import { TextField, TextAreaField, SelectField, CheckboxRow } from "@/components/site/FormFields";
 
 export const Route = createFileRoute("/consent")({
@@ -55,6 +56,14 @@ function ConsentPage() {
   const [understandsAftercare, setUnderstandsAftercare] = useState(false);
   const [consentsToProcedure, setConsentsToProcedure] = useState(false);
   const [signatureName, setSignatureName] = useState("");
+  const [idPhoto, setIdPhoto] = useState<File | null>(null);
+  const [idPhotoPreview, setIdPhotoPreview] = useState<string | null>(null);
+
+  function handleIdPhoto(file: File | null) {
+    if (idPhotoPreview) URL.revokeObjectURL(idPhotoPreview);
+    setIdPhoto(file);
+    setIdPhotoPreview(file ? URL.createObjectURL(file) : null);
+  }
 
   const allAcknowledged =
     confirms18 &&
@@ -74,8 +83,13 @@ function ConsentPage() {
       toast.error("Type your full legal name as your signature.");
       return;
     }
+    if (!idPhoto) {
+      toast.error("Add a photo of your ID before submitting.");
+      return;
+    }
     setBusy(true);
     try {
+      const idPhotoPath = await uploadIdPhoto(idPhoto);
       const { error } = await supabase.from("consent_forms").insert({
         client_name: clientName,
         date_of_birth: dob,
@@ -96,6 +110,7 @@ function ConsentPage() {
         consents_to_procedure: consentsToProcedure,
         signature_name: signatureName,
         signature_date: today(),
+        id_photo_path: idPhotoPath,
       });
       if (error) throw error;
       setSubmitted(true);
@@ -151,6 +166,14 @@ function ConsentPage() {
             <TextField label="Emergency contact name" required value={emergencyName} onChange={(e) => setEmergencyName(e.target.value)} />
             <TextField label="Emergency contact phone" type="tel" required value={emergencyPhone} onChange={(e) => setEmergencyPhone(e.target.value)} />
           </div>
+        </div>
+
+        <div className="grid gap-6">
+          <h2 className="font-serif italic text-2xl">Photo ID</h2>
+          <p className="text-sm text-muted-foreground -mt-3">
+            Required to confirm you're 18 or older. Take a photo now or upload one from your device.
+          </p>
+          <IdPhotoField preview={idPhotoPreview} onFile={handleIdPhoto} />
         </div>
 
         <div className="grid gap-6">
@@ -240,5 +263,65 @@ function ConsentPage() {
         </div>
       </form>
     </>
+  );
+}
+
+function IdPhotoField({
+  preview,
+  onFile,
+}: {
+  preview: string | null;
+  onFile: (file: File | null) => void;
+}) {
+  const cameraRef = useRef<HTMLInputElement>(null);
+  const uploadRef = useRef<HTMLInputElement>(null);
+
+  if (preview) {
+    return (
+      <div className="grid gap-3 max-w-xs">
+        <img src={preview} alt="ID preview" className="w-full border border-border" />
+        <button
+          type="button"
+          onClick={() => onFile(null)}
+          className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground hover:text-foreground justify-self-start"
+        >
+          Remove & retake
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-wrap gap-4">
+      <input
+        ref={cameraRef}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        className="hidden"
+        onChange={(e) => onFile(e.target.files?.[0] ?? null)}
+      />
+      <input
+        ref={uploadRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => onFile(e.target.files?.[0] ?? null)}
+      />
+      <button
+        type="button"
+        onClick={() => cameraRef.current?.click()}
+        className="border border-border px-6 py-3 text-sm uppercase tracking-[0.2em] hover:border-foreground"
+      >
+        Take Photo
+      </button>
+      <button
+        type="button"
+        onClick={() => uploadRef.current?.click()}
+        className="border border-border px-6 py-3 text-sm uppercase tracking-[0.2em] hover:border-foreground"
+      >
+        Upload File
+      </button>
+    </div>
   );
 }

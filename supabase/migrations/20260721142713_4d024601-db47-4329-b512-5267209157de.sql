@@ -1,0 +1,1 @@
+ALTER TABLE public.consent_forms ADD COLUMN IF NOT EXISTS id_photo_path text;

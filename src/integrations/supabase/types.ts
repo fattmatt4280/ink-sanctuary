@@ -69,7 +69,7 @@ export type Database = {
           health_conditions: string[]
           health_notes: string
           id: string
-          id_photo_path: string
+          id_photo_path: string | null
           phone: string
           placement: string
           signature_date: string
@@ -93,7 +93,7 @@ export type Database = {
           health_conditions?: string[]
           health_notes?: string
           id?: string
-          id_photo_path?: string
+          id_photo_path?: string | null
           phone?: string
           placement?: string
           signature_date?: string
@@ -117,7 +117,7 @@ export type Database = {
           health_conditions?: string[]
           health_notes?: string
           id?: string
-          id_photo_path?: string
+          id_photo_path?: string | null
           phone?: string
           placement?: string
           signature_date?: string

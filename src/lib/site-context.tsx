@@ -195,16 +195,38 @@ async function loadFromDb(): Promise<Omit<SiteData, "refresh">> {
   };
 }
 
+const CACHE_KEY = "site-content-cache-v1";
+
+function readCache(): Omit<SiteData, "refresh"> | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw) as Omit<SiteData, "refresh">;
+  } catch {
+    return null;
+  }
+}
+
 export function SiteProvider({ children }: { children: ReactNode }) {
-  const [data, setData] = useState<Omit<SiteData, "refresh">>(FALLBACK);
+  const cached = typeof window !== "undefined" ? readCache() : null;
+  const [data, setData] = useState<Omit<SiteData, "refresh">>(cached ?? FALLBACK);
+  const [ready, setReady] = useState<boolean>(cached !== null);
 
   const refresh = useMemo(
     () => async () => {
       try {
         const fresh = await loadFromDb();
         setData(fresh);
+        setReady(true);
+        try {
+          window.localStorage.setItem(CACHE_KEY, JSON.stringify(fresh));
+        } catch {
+          /* ignore */
+        }
       } catch (e) {
         console.warn("site content load failed", e);
+        setReady(true);
       }
     },
     [],
@@ -215,7 +237,11 @@ export function SiteProvider({ children }: { children: ReactNode }) {
   }, [refresh]);
 
   const value = useMemo<SiteData>(() => ({ ...data, refresh }), [data, refresh]);
-  return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
+  return (
+    <Ctx.Provider value={value}>
+      <div style={{ visibility: ready ? "visible" : "hidden" }}>{children}</div>
+    </Ctx.Provider>
+  );
 }
 
 export function useSite(): SiteData {

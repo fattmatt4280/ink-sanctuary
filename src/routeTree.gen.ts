@@ -23,6 +23,7 @@ import { Route as AftercareRouteImport } from './routes/aftercare'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StudioIndexRouteImport } from './routes/studio.index'
 import { Route as StylesFineLineRouteImport } from './routes/styles.fine-line'
+import { Route as StudioResetPasswordRouteImport } from './routes/studio.reset-password'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as ArtistsSlugRouteImport } from './routes/artists.$slug'
 
@@ -96,6 +97,11 @@ const StylesFineLineRoute = StylesFineLineRouteImport.update({
   path: '/styles/fine-line',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StudioResetPasswordRoute = StudioResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => StudioRoute,
+} as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -122,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/travel': typeof TravelRoute
   '/artists/$slug': typeof ArtistsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/studio/reset-password': typeof StudioResetPasswordRoute
   '/styles/fine-line': typeof StylesFineLineRoute
   '/studio/': typeof StudioIndexRoute
 }
@@ -139,6 +146,7 @@ export interface FileRoutesByTo {
   '/travel': typeof TravelRoute
   '/artists/$slug': typeof ArtistsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/studio/reset-password': typeof StudioResetPasswordRoute
   '/styles/fine-line': typeof StylesFineLineRoute
   '/studio': typeof StudioIndexRoute
 }
@@ -158,6 +166,7 @@ export interface FileRoutesById {
   '/travel': typeof TravelRoute
   '/artists/$slug': typeof ArtistsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/studio/reset-password': typeof StudioResetPasswordRoute
   '/styles/fine-line': typeof StylesFineLineRoute
   '/studio/': typeof StudioIndexRoute
 }
@@ -178,6 +187,7 @@ export interface FileRouteTypes {
     | '/travel'
     | '/artists/$slug'
     | '/blog/$slug'
+    | '/studio/reset-password'
     | '/styles/fine-line'
     | '/studio/'
   fileRoutesByTo: FileRoutesByTo
@@ -195,6 +205,7 @@ export interface FileRouteTypes {
     | '/travel'
     | '/artists/$slug'
     | '/blog/$slug'
+    | '/studio/reset-password'
     | '/styles/fine-line'
     | '/studio'
   id:
@@ -213,6 +224,7 @@ export interface FileRouteTypes {
     | '/travel'
     | '/artists/$slug'
     | '/blog/$slug'
+    | '/studio/reset-password'
     | '/styles/fine-line'
     | '/studio/'
   fileRoutesById: FileRoutesById
@@ -333,6 +345,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StylesFineLineRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/studio/reset-password': {
+      id: '/studio/reset-password'
+      path: '/reset-password'
+      fullPath: '/studio/reset-password'
+      preLoaderRoute: typeof StudioResetPasswordRouteImport
+      parentRoute: typeof StudioRoute
+    }
     '/blog/$slug': {
       id: '/blog/$slug'
       path: '/$slug'
@@ -372,10 +391,12 @@ const BlogRouteChildren: BlogRouteChildren = {
 const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 
 interface StudioRouteChildren {
+  StudioResetPasswordRoute: typeof StudioResetPasswordRoute
   StudioIndexRoute: typeof StudioIndexRoute
 }
 
 const StudioRouteChildren: StudioRouteChildren = {
+  StudioResetPasswordRoute: StudioResetPasswordRoute,
   StudioIndexRoute: StudioIndexRoute,
 }
 

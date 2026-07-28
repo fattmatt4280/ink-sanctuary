@@ -1016,6 +1016,205 @@ function SubmissionsTab() {
   );
 }
 
+/* ------------------------------- Blog ------------------------------- */
+
+type BlogRow = {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  cover_image_url: string | null;
+  published: boolean;
+  published_at: string | null;
+};
+
+function slugify(s: string) {
+  return s
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+}
+
+function BlogTab() {
+  const [posts, setPosts] = useState<BlogRow[]>([]);
+  const [editing, setEditing] = useState<BlogRow | null>(null);
+  const [saving, setSaving] = useState(false);
+
+  async function load() {
+    const { data, error } = await supabase
+      .from("blog_posts")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error) return toast.error(error.message);
+    setPosts((data as BlogRow[]) ?? []);
+  }
+
+  useEffect(() => {
+    void load();
+  }, []);
+
+  function newPost() {
+    setEditing({
+      id: "",
+      slug: "",
+      title: "",
+      excerpt: "",
+      content: "",
+      cover_image_url: null,
+      published: false,
+      published_at: null,
+    });
+  }
+
+  async function save() {
+    if (!editing) return;
+    const slug = editing.slug.trim() || slugify(editing.title);
+    if (!editing.title.trim() || !slug) return toast.error("Title required");
+    setSaving(true);
+    try {
+      const payload = {
+        slug,
+        title: editing.title.trim(),
+        excerpt: editing.excerpt,
+        content: editing.content,
+        cover_image_url: editing.cover_image_url,
+        published: editing.published,
+        published_at: editing.published ? editing.published_at ?? new Date().toISOString() : null,
+      };
+      if (editing.id) {
+        const { error } = await supabase.from("blog_posts").update(payload).eq("id", editing.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from("blog_posts").insert(payload);
+        if (error) throw error;
+      }
+      toast.success("Saved");
+      setEditing(null);
+      await load();
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function remove(id: string, cover: string | null) {
+    if (!confirm("Delete this post?")) return;
+    const { error } = await supabase.from("blog_posts").delete().eq("id", id);
+    if (error) return toast.error(error.message);
+    if (cover) await deleteImage(cover).catch(() => {});
+    toast.success("Deleted");
+    await load();
+  }
+
+  if (editing) {
+    return (
+      <div className="grid gap-6 max-w-3xl">
+        <div className="flex items-center justify-between">
+          <h2 className="font-serif italic text-2xl">{editing.id ? "Edit post" : "New post"}</h2>
+          <Button variant="secondary" onClick={() => setEditing(null)}>← Back</Button>
+        </div>
+
+        <TextInput
+          label="Title"
+          value={editing.title}
+          onChange={(v: string) =>
+            setEditing({
+              ...editing,
+              title: v,
+              slug: editing.id ? editing.slug : slugify(v),
+            })
+          }
+        />
+        <TextInput
+          label="Slug (URL)"
+          value={editing.slug}
+          onChange={(v: string) => setEditing({ ...editing, slug: slugify(v) })}
+        />
+        <TextArea
+          label="Excerpt (shown on journal index)"
+          value={editing.excerpt}
+          rows={3}
+          onChange={(v: string) => setEditing({ ...editing, excerpt: v })}
+        />
+
+        <ImagePicker
+          path={editing.cover_image_url}
+          folder="blog"
+          label="Cover image"
+          onChange={(p: string | null) => setEditing({ ...editing, cover_image_url: p })}
+        />
+
+        <TextArea
+          label="Body (plain text or Markdown-ish; line breaks preserved)"
+          value={editing.content}
+          rows={20}
+          onChange={(v: string) => setEditing({ ...editing, content: v })}
+        />
+
+        <label className="flex items-center gap-3 text-sm">
+          <input
+            type="checkbox"
+            checked={editing.published}
+            onChange={(e) => setEditing({ ...editing, published: e.target.checked })}
+          />
+          <span className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+            Published (visible at /blog)
+          </span>
+        </label>
+
+        <div className="flex gap-3">
+          <Button onClick={save} disabled={saving}>{saving ? "Saving…" : "Save post"}</Button>
+          <Button variant="secondary" onClick={() => setEditing(null)}>Cancel</Button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid gap-6 max-w-4xl">
+      <div className="flex items-center justify-between">
+        <h2 className="font-serif italic text-2xl">Journal posts</h2>
+        <Button onClick={newPost}>+ New post</Button>
+      </div>
+
+      {posts.length === 0 ? (
+        <p className="text-muted-foreground text-sm">No posts yet. Create your first.</p>
+      ) : (
+        <div className="grid gap-3">
+          {posts.map((p) => (
+            <div
+              key={p.id}
+              className="border border-border p-4 flex items-center justify-between gap-4"
+            >
+              <div className="min-w-0">
+                <div className="flex items-center gap-3">
+                  <span className="font-serif italic text-lg truncate">{p.title}</span>
+                  <span
+                    className={`text-[9px] uppercase tracking-[0.25em] px-2 py-0.5 border ${
+                      p.published ? "border-foreground text-foreground" : "border-border text-muted-foreground"
+                    }`}
+                  >
+                    {p.published ? "Live" : "Draft"}
+                  </span>
+                </div>
+                <div className="text-xs text-muted-foreground mt-1 truncate">/blog/{p.slug}</div>
+              </div>
+              <div className="flex gap-2 shrink-0">
+                <Button variant="secondary" onClick={() => setEditing(p)}>Edit</Button>
+                <Button variant="danger" onClick={() => remove(p.id, p.cover_image_url)}>Delete</Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ------------------------------- Root ------------------------------- */
 
 function StudioHome() {

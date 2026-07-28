@@ -17,11 +17,13 @@ import { Route as MerchRouteImport } from './routes/merch'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ConsentRouteImport } from './routes/consent'
 import { Route as BookingRouteImport } from './routes/booking'
+import { Route as BlogRouteImport } from './routes/blog'
 import { Route as ArtistsRouteImport } from './routes/artists'
 import { Route as AftercareRouteImport } from './routes/aftercare'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StudioIndexRouteImport } from './routes/studio.index'
 import { Route as StylesFineLineRouteImport } from './routes/styles.fine-line'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as ArtistsSlugRouteImport } from './routes/artists.$slug'
 
 const TravelRoute = TravelRouteImport.update({
@@ -64,6 +66,11 @@ const BookingRoute = BookingRouteImport.update({
   path: '/booking',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ArtistsRoute = ArtistsRouteImport.update({
   id: '/artists',
   path: '/artists',
@@ -89,6 +96,11 @@ const StylesFineLineRoute = StylesFineLineRouteImport.update({
   path: '/styles/fine-line',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BlogRoute,
+} as any)
 const ArtistsSlugRoute = ArtistsSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -99,6 +111,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/aftercare': typeof AftercareRoute
   '/artists': typeof ArtistsRouteWithChildren
+  '/blog': typeof BlogRouteWithChildren
   '/booking': typeof BookingRoute
   '/consent': typeof ConsentRoute
   '/contact': typeof ContactRoute
@@ -108,6 +121,7 @@ export interface FileRoutesByFullPath {
   '/studio': typeof StudioRouteWithChildren
   '/travel': typeof TravelRoute
   '/artists/$slug': typeof ArtistsSlugRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/styles/fine-line': typeof StylesFineLineRoute
   '/studio/': typeof StudioIndexRoute
 }
@@ -115,6 +129,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/aftercare': typeof AftercareRoute
   '/artists': typeof ArtistsRouteWithChildren
+  '/blog': typeof BlogRouteWithChildren
   '/booking': typeof BookingRoute
   '/consent': typeof ConsentRoute
   '/contact': typeof ContactRoute
@@ -123,6 +138,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/travel': typeof TravelRoute
   '/artists/$slug': typeof ArtistsSlugRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/styles/fine-line': typeof StylesFineLineRoute
   '/studio': typeof StudioIndexRoute
 }
@@ -131,6 +147,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/aftercare': typeof AftercareRoute
   '/artists': typeof ArtistsRouteWithChildren
+  '/blog': typeof BlogRouteWithChildren
   '/booking': typeof BookingRoute
   '/consent': typeof ConsentRoute
   '/contact': typeof ContactRoute
@@ -140,6 +157,7 @@ export interface FileRoutesById {
   '/studio': typeof StudioRouteWithChildren
   '/travel': typeof TravelRoute
   '/artists/$slug': typeof ArtistsSlugRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/styles/fine-line': typeof StylesFineLineRoute
   '/studio/': typeof StudioIndexRoute
 }
@@ -149,6 +167,7 @@ export interface FileRouteTypes {
     | '/'
     | '/aftercare'
     | '/artists'
+    | '/blog'
     | '/booking'
     | '/consent'
     | '/contact'
@@ -158,6 +177,7 @@ export interface FileRouteTypes {
     | '/studio'
     | '/travel'
     | '/artists/$slug'
+    | '/blog/$slug'
     | '/styles/fine-line'
     | '/studio/'
   fileRoutesByTo: FileRoutesByTo
@@ -165,6 +185,7 @@ export interface FileRouteTypes {
     | '/'
     | '/aftercare'
     | '/artists'
+    | '/blog'
     | '/booking'
     | '/consent'
     | '/contact'
@@ -173,6 +194,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/travel'
     | '/artists/$slug'
+    | '/blog/$slug'
     | '/styles/fine-line'
     | '/studio'
   id:
@@ -180,6 +202,7 @@ export interface FileRouteTypes {
     | '/'
     | '/aftercare'
     | '/artists'
+    | '/blog'
     | '/booking'
     | '/consent'
     | '/contact'
@@ -189,6 +212,7 @@ export interface FileRouteTypes {
     | '/studio'
     | '/travel'
     | '/artists/$slug'
+    | '/blog/$slug'
     | '/styles/fine-line'
     | '/studio/'
   fileRoutesById: FileRoutesById
@@ -197,6 +221,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AftercareRoute: typeof AftercareRoute
   ArtistsRoute: typeof ArtistsRouteWithChildren
+  BlogRoute: typeof BlogRouteWithChildren
   BookingRoute: typeof BookingRoute
   ConsentRoute: typeof ConsentRoute
   ContactRoute: typeof ContactRoute
@@ -266,6 +291,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BookingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/artists': {
       id: '/artists'
       path: '/artists'
@@ -301,6 +333,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StylesFineLineRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof BlogRoute
+    }
     '/artists/$slug': {
       id: '/artists/$slug'
       path: '/$slug'
@@ -322,6 +361,16 @@ const ArtistsRouteChildren: ArtistsRouteChildren = {
 const ArtistsRouteWithChildren =
   ArtistsRoute._addFileChildren(ArtistsRouteChildren)
 
+interface BlogRouteChildren {
+  BlogSlugRoute: typeof BlogSlugRoute
+}
+
+const BlogRouteChildren: BlogRouteChildren = {
+  BlogSlugRoute: BlogSlugRoute,
+}
+
+const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
+
 interface StudioRouteChildren {
   StudioIndexRoute: typeof StudioIndexRoute
 }
@@ -337,6 +386,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AftercareRoute: AftercareRoute,
   ArtistsRoute: ArtistsRouteWithChildren,
+  BlogRoute: BlogRouteWithChildren,
   BookingRoute: BookingRoute,
   ConsentRoute: ConsentRoute,
   ContactRoute: ContactRoute,

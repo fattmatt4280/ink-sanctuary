@@ -5,9 +5,22 @@ import { SocialIcons } from "@/components/site/SocialIcons";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact" },
-      { name: "description", content: "Address, hours, phone, and directions." },
+      { title: "Contact & Directions — Leon's Art Tattoo, Aurora IL" },
+      {
+        name: "description",
+        content:
+          "Leon's Art Tattoo — 1161 N Farnsworth Ave, Aurora, IL 60505. Hours, phone, email, directions, and social links.",
+      },
+      { property: "og:title", content: "Contact & Directions — Leon's Art Tattoo" },
+      {
+        property: "og:description",
+        content:
+          "Visit Leon's Art Tattoo at 1161 N Farnsworth Ave, Aurora, IL. Hours, phone, email, and directions.",
+      },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "/contact" },
     ],
+    links: [{ rel: "canonical", href: "/contact" }],
   }),
   component: ContactPage,
 });

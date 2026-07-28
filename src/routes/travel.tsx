@@ -5,9 +5,22 @@ import { useSite } from "@/lib/site-context";
 export const Route = createFileRoute("/travel")({
   head: () => ({
     meta: [
-      { title: "Travel & Guest Spots" },
-      { name: "description", content: "Upcoming conventions and guest spots — cities, dates, and host studios." },
+      { title: "Guest Spots & Convention Travel — Leon's Art Tattoo" },
+      {
+        name: "description",
+        content:
+          "Upcoming tattoo convention appearances and guest spots by Leon's Art Tattoo artists — cities, dates, and host studios.",
+      },
+      { property: "og:title", content: "Guest Spots & Convention Travel — Leon's Art Tattoo" },
+      {
+        property: "og:description",
+        content:
+          "Where Leon's Art Tattoo artists are travelling next — conventions and guest spots by city and date.",
+      },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "/travel" },
     ],
+    links: [{ rel: "canonical", href: "/travel" }],
   }),
   component: TravelPage,
 });

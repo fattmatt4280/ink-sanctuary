@@ -81,9 +81,12 @@ function AftercarePage() {
         <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-muted-foreground mb-6">
           Aftercare
         </div>
-        <h1 className="font-serif italic text-5xl md:text-6xl max-w-[16ch] leading-[0.95]">
-          Keep it clean. Keep it moisturized. Leave it alone.
+        <h1 className="font-serif italic text-5xl md:text-6xl max-w-[18ch] leading-[0.95]">
+          Tattoo Aftercare Instructions
         </h1>
+        <p className="mt-6 text-sm uppercase tracking-[0.25em] text-muted-foreground">
+          Keep it clean. Keep it moisturized. Leave it alone.
+        </p>
       </section>
 
       <section className="px-6 md:px-12 py-20 grid gap-12 md:gap-16">

@@ -4,14 +4,22 @@ import { useState } from "react";
 export const Route = createFileRoute("/merch")({
   head: () => ({
     meta: [
-      { title: "Merch — [SHOP NAME]" },
+      { title: "Merch — Coming Soon — Leon's Art Tattoo" },
       {
         name: "description",
         content:
-          "Merch from [SHOP NAME] is coming soon. Sign up to be notified when the first drop is available.",
+          "Merch from Leon's Art Tattoo is coming soon. Sign up to be notified the moment the first drop is live.",
       },
-      { property: "og:title", content: "Merch — [SHOP NAME]" },
+      { property: "og:title", content: "Merch — Coming Soon — Leon's Art Tattoo" },
+      {
+        property: "og:description",
+        content:
+          "The first Leon's Art Tattoo merch drop is on the way. Leave an email to hear when it lands.",
+      },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "/merch" },
     ],
+    links: [{ rel: "canonical", href: "/merch" }],
   }),
   component: MerchPage,
 });

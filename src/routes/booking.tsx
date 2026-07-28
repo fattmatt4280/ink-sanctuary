@@ -14,14 +14,22 @@ import { TextField, TextAreaField, SelectField } from "@/components/site/FormFie
 export const Route = createFileRoute("/booking")({
   head: () => ({
     meta: [
-      { title: "Booking — [SHOP NAME]" },
+      { title: "Book a Tattoo Appointment — Leon's Art Tattoo, Aurora IL" },
       {
         name: "description",
         content:
-          "Book a consultation or session at [SHOP NAME] in Aurora, IL. Deposits, cancellation policy, and what to bring to your appointment.",
+          "Book a consultation or tattoo session at Leon's Art Tattoo in Aurora, IL. Deposits, cancellation policy, and what to bring to your appointment.",
       },
-      { property: "og:title", content: "Booking — [SHOP NAME]" },
+      { property: "og:title", content: "Book a Tattoo Appointment — Leon's Art Tattoo" },
+      {
+        property: "og:description",
+        content:
+          "Request a tattoo consultation at Leon's Art Tattoo in Aurora, IL. Deposits, rescheduling, and day-of preparation explained.",
+      },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "/booking" },
     ],
+    links: [{ rel: "canonical", href: "/booking" }],
   }),
   component: BookingPage,
 });
@@ -35,8 +43,11 @@ function BookingPage() {
             Booking
           </div>
           <h1 className="font-serif italic text-5xl md:text-6xl leading-[0.95] max-w-[18ch]">
-            Reserve a session. We'll take it from there.
+            Book a Tattoo Appointment
           </h1>
+          <p className="mt-4 text-sm uppercase tracking-[0.25em] text-muted-foreground">
+            Reserve a session. We'll take it from there.
+          </p>
         </div>
         <div className="text-base md:text-lg text-muted-foreground leading-relaxed">
           <p>

@@ -8,10 +8,13 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 export const claimAdminRole = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const adminEmail = process.env.ADMIN_EMAIL?.toLowerCase().trim();
-    if (!adminEmail) throw new Error("ADMIN_EMAIL not configured");
+    const adminEmails = (process.env.ADMIN_EMAIL ?? "")
+      .split(",")
+      .map((e) => e.toLowerCase().trim())
+      .filter(Boolean);
+    if (adminEmails.length === 0) throw new Error("ADMIN_EMAIL not configured");
     const email = (context.claims?.email as string | undefined)?.toLowerCase().trim();
-    if (!email || email !== adminEmail) {
+    if (!email || !adminEmails.includes(email)) {
       return { granted: false as const };
     }
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");

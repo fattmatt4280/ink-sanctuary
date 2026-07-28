@@ -209,9 +209,8 @@ function readCache(): Omit<SiteData, "refresh"> | null {
 }
 
 export function SiteProvider({ children }: { children: ReactNode }) {
-  const cached = typeof window !== "undefined" ? readCache() : null;
-  const [data, setData] = useState<Omit<SiteData, "refresh">>(cached ?? FALLBACK);
-  const [ready, setReady] = useState<boolean>(cached !== null);
+  const [data, setData] = useState<Omit<SiteData, "refresh">>(FALLBACK);
+  const [ready, setReady] = useState<boolean>(false);
 
   const refresh = useMemo(
     () => async () => {
@@ -233,13 +232,17 @@ export function SiteProvider({ children }: { children: ReactNode }) {
   );
 
   useEffect(() => {
-    // Never gate visibility on admin/studio routes — the login form must always show.
+    // Studio/admin routes must never be gated — show login immediately.
     if (window.location.pathname.startsWith("/studio")) {
       setReady(true);
       return;
     }
+    const cached = readCache();
+    if (cached) {
+      setData(cached);
+      setReady(true);
+    }
     void refresh();
-    // Safety: never keep the UI hidden for more than a moment.
     const t = window.setTimeout(() => setReady(true), 1000);
     return () => window.clearTimeout(t);
   }, [refresh]);
@@ -247,10 +250,11 @@ export function SiteProvider({ children }: { children: ReactNode }) {
   const value = useMemo<SiteData>(() => ({ ...data, refresh }), [data, refresh]);
   return (
     <Ctx.Provider value={value}>
-      <div style={{ visibility: ready ? "visible" : "hidden" }}>{children}</div>
+      <div style={ready ? undefined : { visibility: "hidden" }}>{children}</div>
     </Ctx.Provider>
   );
 }
+
 
 export function useSite(): SiteData {
   const v = useContext(Ctx);

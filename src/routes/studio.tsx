@@ -112,34 +112,45 @@ function StudioLayout() {
 }
 
 function StudioLogin() {
-  const [mode, setMode] = useState<"in" | "up">("in");
+  const [mode, setMode] = useState<"in" | "up" | "forgot">("in");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState<string | null>(null);
+  const [info, setInfo] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true);
     setErr(null);
+    setInfo(null);
     try {
       if (mode === "in") {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-      } else {
+      } else if (mode === "up") {
         const { error } = await supabase.auth.signUp({
           email,
           password,
           options: { emailRedirectTo: `${window.location.origin}/studio` },
         });
         if (error) throw error;
+      } else {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/studio/reset-password`,
+        });
+        if (error) throw error;
+        setInfo("Check your email for a password reset link.");
       }
     } catch (e: any) {
-      setErr(e.message ?? "Sign in failed");
+      setErr(e.message ?? "Request failed");
     } finally {
       setBusy(false);
     }
   }
+
+  const title = mode === "in" ? "Sign in." : mode === "up" ? "Create account." : "Reset password.";
+  const cta = mode === "in" ? "Sign in" : mode === "up" ? "Create account" : "Send reset link";
 
   return (
     <div className="min-h-screen grid place-items-center bg-background px-6">
@@ -147,9 +158,7 @@ function StudioLogin() {
         <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-muted-foreground mb-4">
           Studio
         </div>
-        <h1 className="font-serif italic text-4xl mb-8">
-          {mode === "in" ? "Sign in." : "Create account."}
-        </h1>
+        <h1 className="font-serif italic text-4xl mb-8">{title}</h1>
         <label className="block text-[10px] uppercase tracking-[0.25em] text-muted-foreground mb-2">Email</label>
         <input
           type="email"
@@ -159,31 +168,53 @@ function StudioLogin() {
           onChange={(e) => setEmail(e.target.value)}
           className="w-full bg-background border border-border px-3 py-3 mb-4 text-sm focus:outline-none focus:border-foreground"
         />
-        <label className="block text-[10px] uppercase tracking-[0.25em] text-muted-foreground mb-2">Password</label>
-        <input
-          type="password"
-          required
-          minLength={8}
-          autoComplete={mode === "in" ? "current-password" : "new-password"}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full bg-background border border-border px-3 py-3 mb-6 text-sm focus:outline-none focus:border-foreground"
-        />
+        {mode !== "forgot" && (
+          <>
+            <label className="block text-[10px] uppercase tracking-[0.25em] text-muted-foreground mb-2">Password</label>
+            <input
+              type="password"
+              required
+              minLength={8}
+              autoComplete={mode === "in" ? "current-password" : "new-password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full bg-background border border-border px-3 py-3 mb-6 text-sm focus:outline-none focus:border-foreground"
+            />
+          </>
+        )}
         {err && <p className="text-xs text-destructive mb-4">{err}</p>}
+        {info && <p className="text-xs text-muted-foreground mb-4">{info}</p>}
         <button
           type="submit"
           disabled={busy}
           className="w-full bg-foreground text-background py-3 text-sm uppercase tracking-[0.25em] disabled:opacity-50"
         >
-          {busy ? "…" : mode === "in" ? "Sign in" : "Create account"}
+          {busy ? "…" : cta}
         </button>
-        <button
-          type="button"
-          onClick={() => setMode(mode === "in" ? "up" : "in")}
-          className="mt-4 w-full text-[10px] uppercase tracking-[0.25em] text-muted-foreground hover:text-foreground"
-        >
-          {mode === "in" ? "Need an account?" : "Have an account?"}
-        </button>
+        <div className="mt-4 flex flex-col gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              setMode(mode === "in" ? "up" : "in");
+              setErr(null);
+              setInfo(null);
+            }}
+            className="w-full text-[10px] uppercase tracking-[0.25em] text-muted-foreground hover:text-foreground"
+          >
+            {mode === "up" ? "Have an account?" : "Need an account?"}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setMode(mode === "forgot" ? "in" : "forgot");
+              setErr(null);
+              setInfo(null);
+            }}
+            className="w-full text-[10px] uppercase tracking-[0.25em] text-muted-foreground hover:text-foreground"
+          >
+            {mode === "forgot" ? "Back to sign in" : "Forgot password?"}
+          </button>
+        </div>
       </form>
     </div>
   );

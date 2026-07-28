@@ -38,7 +38,7 @@ function MerchPage() {
           Something worth wearing is on the way.
         </h1>
         <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-10">
-          The first [SHOP NAME] drop is in production. Leave an email and we'll tell you
+          The first Leon's Art Tattoo drop is in production. Leave an email and we'll tell you
           the moment it's live — no other mailings.
         </p>
         {submitted ? (

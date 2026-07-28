@@ -5,12 +5,48 @@ import { BookCTA } from "@/components/site/BookCTA";
 import { useSite } from "@/lib/site-context";
 
 export const Route = createFileRoute("/artists/$slug")({
-  head: () => ({
-    meta: [
-      { title: "Artist" },
-      { name: "description", content: "Portfolio and booking for the artist." },
-    ],
-  }),
+  head: ({ params }) => {
+    const readable = params.slug
+      .split("-")
+      .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+      .join(" ");
+    const title = `${readable} — Tattoo Artist at Leon's Art Tattoo`;
+    const description = `Portfolio, specialties, and booking for ${readable} at Leon's Art Tattoo in Aurora, IL. Browse recent work and request a consultation.`;
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:type", content: "profile" },
+        { property: "og:url", content: `/artists/${params.slug}` },
+      ],
+      links: [{ rel: "canonical", href: `/artists/${params.slug}` }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Person",
+            name: readable,
+            jobTitle: "Tattoo Artist",
+            worksFor: {
+              "@type": "TattooParlor",
+              name: "Leon's Art Tattoo",
+              address: {
+                "@type": "PostalAddress",
+                streetAddress: "1161 N Farnsworth Ave",
+                addressLocality: "Aurora",
+                addressRegion: "IL",
+                postalCode: "60505",
+                addressCountry: "US",
+              },
+            },
+          }),
+        },
+      ],
+    };
+  },
   component: ArtistDetail,
   notFoundComponent: () => (
     <div className="px-6 py-32 text-center">

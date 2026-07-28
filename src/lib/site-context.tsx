@@ -233,21 +233,21 @@ export function SiteProvider({ children }: { children: ReactNode }) {
   );
 
   useEffect(() => {
+    // Never gate visibility on admin/studio routes — the login form must always show.
+    if (window.location.pathname.startsWith("/studio")) {
+      setReady(true);
+      return;
+    }
     void refresh();
     // Safety: never keep the UI hidden for more than a moment.
     const t = window.setTimeout(() => setReady(true), 1000);
     return () => window.clearTimeout(t);
   }, [refresh]);
 
-  // Never gate visibility on admin/studio routes — the login form must always show.
-  const isStudio =
-    typeof window !== "undefined" && window.location.pathname.startsWith("/studio");
-  const shouldHide = !ready && !isStudio;
-
   const value = useMemo<SiteData>(() => ({ ...data, refresh }), [data, refresh]);
   return (
     <Ctx.Provider value={value}>
-      <div style={{ visibility: shouldHide ? "hidden" : "visible" }}>{children}</div>
+      <div style={{ visibility: ready ? "visible" : "hidden" }}>{children}</div>
     </Ctx.Provider>
   );
 }

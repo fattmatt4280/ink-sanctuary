@@ -1227,6 +1227,7 @@ function StudioHome() {
       { v: "travel", label: "Travel", el: <TravelTab /> },
       { v: "aftercare", label: "Aftercare", el: <AftercareTab /> },
       { v: "submissions", label: "Submissions", el: <SubmissionsTab /> },
+      { v: "blog", label: "Journal", el: <BlogTab /> },
     ],
     [],
   );

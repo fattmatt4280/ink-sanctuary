@@ -5,12 +5,22 @@ import { useSite } from "@/lib/site-context";
 export const Route = createFileRoute("/artists")({
   head: () => ({
     meta: [
-      { title: "Artists" },
+      { title: "Meet Our Tattoo Artists — Leon's Art Tattoo, Aurora IL" },
       {
         name: "description",
-        content: "Meet the resident artists — specialists in fine-line, black & grey, color realism, traditional, and blackwork tattooing.",
+        content:
+          "Meet the resident tattoo artists at Leon's Art Tattoo in Aurora, IL — specialists in fine line, black & grey, color realism, traditional, and blackwork.",
       },
+      { property: "og:title", content: "Meet Our Tattoo Artists — Leon's Art Tattoo" },
+      {
+        property: "og:description",
+        content:
+          "Resident tattoo artists at Leon's Art Tattoo in Aurora, IL. Portfolios, specialties, and booking for every hand in the studio.",
+      },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "/artists" },
     ],
+    links: [{ rel: "canonical", href: "/artists" }],
   }),
   component: ArtistsPage,
 });
@@ -24,8 +34,11 @@ function ArtistsPage() {
           The Collective
         </div>
         <h1 className="font-serif italic text-5xl md:text-6xl max-w-[18ch] leading-[0.95]">
-          Hands. Disciplines. One studio.
+          Meet Our Tattoo Artists
         </h1>
+        <p className="mt-6 text-sm uppercase tracking-[0.25em] text-muted-foreground">
+          Hands. Disciplines. One studio.
+        </p>
       </section>
 
       <section className="hairline-grid grid grid-cols-1 md:grid-cols-2">

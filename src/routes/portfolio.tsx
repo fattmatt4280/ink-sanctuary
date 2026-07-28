@@ -6,9 +6,22 @@ import { useSite } from "@/lib/site-context";
 export const Route = createFileRoute("/portfolio")({
   head: () => ({
     meta: [
-      { title: "Portfolio" },
-      { name: "description", content: "The full archive of work. Filter by artist and by style." },
+      { title: "Tattoo Portfolio & Gallery — Leon's Art Tattoo" },
+      {
+        name: "description",
+        content:
+          "The full archive of tattoo work from Leon's Art Tattoo in Aurora, IL. Filter by artist and by style — fine line, black & grey, color realism, traditional, and more.",
+      },
+      { property: "og:title", content: "Tattoo Portfolio & Gallery — Leon's Art Tattoo" },
+      {
+        property: "og:description",
+        content:
+          "Browse the full archive of tattoos from Leon's Art Tattoo in Aurora, IL. Filter by artist and style.",
+      },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "/portfolio" },
     ],
+    links: [{ rel: "canonical", href: "/portfolio" }],
   }),
   component: PortfolioPage,
 });
@@ -39,9 +52,12 @@ function PortfolioPage() {
         <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-muted-foreground mb-6">
           Archive
         </div>
-        <h1 className="font-serif italic text-5xl md:text-6xl max-w-[16ch] leading-[0.95]">
-          Every piece. Every hand. One archive.
+        <h1 className="font-serif italic text-5xl md:text-6xl max-w-[18ch] leading-[0.95]">
+          Tattoo Portfolio &amp; Gallery
         </h1>
+        <p className="mt-6 text-sm uppercase tracking-[0.25em] text-muted-foreground">
+          Every piece. Every hand. One archive.
+        </p>
       </section>
 
       <div className="sticky top-[57px] md:top-[65px] z-40 bg-background/90 backdrop-blur-md border-b border-border">
@@ -102,7 +118,11 @@ function PortfolioPage() {
             const a = artists.find((x) => x.id === p.artist_id) ?? artists.find((x) => x.slug === p.artist_slug);
             return (
               <div key={p.id} className="group relative bg-background">
-                <RemoteImage path={p.image_url} aspect="square" label={p.style} />
+                <RemoteImage
+                  path={p.image_url}
+                  aspect="square"
+                  label={`${p.style} tattoo${a ? ` by ${a.name}` : ""}`}
+                />
                 <div className="absolute inset-x-0 bottom-0 p-4 flex items-end justify-between text-[10px] uppercase tracking-[0.2em] opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-t from-background to-transparent">
                   <span>{p.style}</span>
                   <span className="text-muted-foreground">{a?.name}</span>

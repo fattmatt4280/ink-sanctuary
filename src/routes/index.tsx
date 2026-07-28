@@ -8,11 +8,55 @@ import { useSite } from "@/lib/site-context";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Tattoo Studio · Aurora, IL" },
+      { title: "Leon's Art Tattoo — Custom Tattoo Studio in Aurora, IL" },
       {
         name: "description",
         content:
-          "A contemporary tattoo studio in Aurora, IL. Fine-line, black & grey, color realism, and traditional work by appointment. Walk-ins welcome.",
+          "Leon's Art Tattoo is a contemporary tattoo studio in Aurora, IL. Fine line, black & grey, color realism, and traditional work by appointment. Walk-ins welcome.",
+      },
+      { property: "og:title", content: "Leon's Art Tattoo — Custom Tattoo Studio in Aurora, IL" },
+      {
+        property: "og:description",
+        content:
+          "Contemporary custom tattoo studio in Aurora, IL. Fine line, black & grey, color realism, and traditional work by appointment.",
+      },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "/" },
+    ],
+    links: [{ rel: "canonical", href: "/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "TattooParlor",
+          name: "Leon's Art Tattoo",
+          image: [],
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: "1161 N Farnsworth Ave",
+            addressLocality: "Aurora",
+            addressRegion: "IL",
+            postalCode: "60505",
+            addressCountry: "US",
+          },
+          areaServed: "Aurora, IL",
+          priceRange: "$$",
+          openingHoursSpecification: [
+            {
+              "@type": "OpeningHoursSpecification",
+              dayOfWeek: ["Tuesday", "Wednesday", "Thursday"],
+              opens: "12:00",
+              closes: "20:00",
+            },
+            {
+              "@type": "OpeningHoursSpecification",
+              dayOfWeek: ["Friday", "Saturday"],
+              opens: "12:00",
+              closes: "22:00",
+            },
+          ],
+        }),
       },
     ],
   }),
@@ -87,7 +131,11 @@ function Home() {
               : ({ children, ...r }: any) => <div {...r}>{children}</div>;
             return (
               <Wrapper key={p.id} className="group relative block bg-background">
-                <RemoteImage path={p.image_url} aspect="square" label={p.style} />
+                <RemoteImage
+                  path={p.image_url}
+                  aspect="square"
+                  label={`${p.style} tattoo${artist ? ` by ${artist.name}` : ""}`}
+                />
                 <div className="absolute inset-x-0 bottom-0 p-4 flex items-end justify-between text-[10px] uppercase tracking-[0.2em] opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-t from-background to-transparent">
                   <span>{p.style}</span>
                   <span className="text-muted-foreground">{artist?.name}</span>

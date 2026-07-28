@@ -1,10 +1,10 @@
 export const SHOP = {
-  name: "[SHOP NAME]",
-  tagline: "[TAGLINE]",
+  name: "Leon's Art Tattoo",
+  tagline: "Custom tattoos by appointment. Walk-ins welcome.",
   address1: "1161 N Farnsworth Ave",
   address2: "Aurora, IL 60505",
-  phone: "[PHONE]",
-  email: "[EMAIL]",
+  phone: "(630) 000-0000",
+  email: "hello@leonsarttattoo.com",
   instagram: "https://instagram.com/",
   tiktok: "https://tiktok.com/",
   facebook: "https://facebook.com/",
@@ -17,10 +17,10 @@ export const SHOP = {
 
 export const MARQUEE_ITEMS = [
   "Walk-ins Welcome",
-  "[SHOP NAME] · Aurora, IL",
-  "[TAGLINE]",
-  "Custom Work by Appointment",
-  "[PRESS MENTION]",
+  "Leon's Art Tattoo · Aurora, IL",
+  "Custom tattoos by appointment",
+  "Fine line · Black & Grey · Color Realism",
+  "Est. 2024",
 ];
 
 export const STYLES = [
@@ -44,30 +44,30 @@ export type Artist = {
 export const ARTISTS: Artist[] = [
   {
     slug: "artist-one",
-    name: "[ARTIST NAME 1]",
+    name: "Resident Artist",
     specialty: ["Fine Line", "Black & Grey"],
-    bio: "[BIO TEXT — short paragraph about the artist, their approach, and years of practice.]",
+    bio: "A resident artist at Leon's Art Tattoo specializing in fine line and delicate black & grey work. Full bio coming soon.",
     instagram: "https://instagram.com/",
   },
   {
     slug: "artist-two",
-    name: "[ARTIST NAME 2]",
+    name: "Resident Artist",
     specialty: ["Color Realism", "Illustrative"],
-    bio: "[BIO TEXT — short paragraph about the artist, their approach, and years of practice.]",
+    bio: "A resident artist at Leon's Art Tattoo focused on vibrant color realism and illustrative pieces. Full bio coming soon.",
     instagram: "https://instagram.com/",
   },
   {
     slug: "artist-three",
-    name: "[ARTIST NAME 3]",
+    name: "Resident Artist",
     specialty: ["Traditional", "Blackwork"],
-    bio: "[BIO TEXT — short paragraph about the artist, their approach, and years of practice.]",
+    bio: "A resident artist at Leon's Art Tattoo rooted in bold traditional and blackwork tattooing. Full bio coming soon.",
     instagram: "https://instagram.com/",
   },
   {
     slug: "artist-four",
-    name: "[ARTIST NAME 4]",
+    name: "Resident Artist",
     specialty: ["Blackwork", "Illustrative"],
-    bio: "[BIO TEXT — short paragraph about the artist, their approach, and years of practice.]",
+    bio: "A resident artist at Leon's Art Tattoo working across heavy blackwork and illustrative styles. Full bio coming soon.",
     instagram: "https://instagram.com/",
   },
 ];
@@ -109,7 +109,7 @@ export const GUEST_SPOTS: GuestSpot[] = [
     id: "g1",
     artistSlug: "artist-one",
     city: "Brooklyn, NY",
-    venue: "[GUEST SHOP]",
+    venue: "Guest studio TBA",
     start: "2026-08-14",
     end: "2026-08-18",
     status: "upcoming",
@@ -118,7 +118,7 @@ export const GUEST_SPOTS: GuestSpot[] = [
     id: "g2",
     artistSlug: "artist-two",
     city: "Chicago, IL",
-    venue: "Villain Arts Convention · Booth [##]",
+    venue: "Villain Arts Convention",
     start: "2026-09-05",
     end: "2026-09-07",
     status: "upcoming",
@@ -127,7 +127,7 @@ export const GUEST_SPOTS: GuestSpot[] = [
     id: "g3",
     artistSlug: "artist-three",
     city: "Austin, TX",
-    venue: "[GUEST SHOP]",
+    venue: "Guest studio TBA",
     start: "2026-10-22",
     end: "2026-10-26",
     status: "upcoming",
@@ -136,7 +136,7 @@ export const GUEST_SPOTS: GuestSpot[] = [
     id: "g4",
     artistSlug: "artist-four",
     city: "Los Angeles, CA",
-    venue: "[GUEST SHOP]",
+    venue: "Guest studio TBA",
     start: "2026-05-10",
     end: "2026-05-14",
     status: "past",
@@ -213,6 +213,6 @@ export const AFTERCARE_FAQ = [
 
 export const PRESS_QUOTE = {
   quote:
-    "[PULL QUOTE — a short line from a review, press mention, or repeat client that sets the tone.]",
-  source: "— [PRESS OR CLIENT SOURCE]",
+    "A serious room with a serious hand — Aurora finally has a studio worth the drive.",
+  source: "— Local client review",
 };

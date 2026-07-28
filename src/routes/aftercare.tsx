@@ -10,8 +10,64 @@ import { useSite } from "@/lib/site-context";
 export const Route = createFileRoute("/aftercare")({
   head: () => ({
     meta: [
-      { title: "Aftercare" },
-      { name: "description", content: "Step-by-step healing instructions, do's and don'ts, product recommendations, and FAQs." },
+      { title: "Tattoo Aftercare Instructions — Leon's Art Tattoo" },
+      {
+        name: "description",
+        content:
+          "Step-by-step tattoo aftercare instructions from Leon's Art Tattoo — healing timeline, do's and don'ts, recommended products, and FAQs.",
+      },
+      { property: "og:title", content: "Tattoo Aftercare Instructions — Leon's Art Tattoo" },
+      {
+        property: "og:description",
+        content:
+          "How to heal a new tattoo — a step-by-step aftercare guide from Leon's Art Tattoo in Aurora, IL.",
+      },
+      { property: "og:type", content: "article" },
+      { property: "og:url", content: "/aftercare" },
+    ],
+    links: [{ rel: "canonical", href: "/aftercare" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: [
+            {
+              "@type": "Question",
+              name: "Is a little redness and swelling normal?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Yes — for the first 48 hours. If it worsens after day 3, spreads, or feels hot, contact us.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "What if it scabs heavily?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Light flaking is expected. Thick scabbing usually means it's over-moisturized or has been re-injured. Ease off ointment and keep it clean.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "When can I swim or work out?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Light movement is fine after 48 hours. No soaking (pools, oceans, hot tubs, baths) for a full 3 weeks.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "When should I book a touch-up?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Wait at least 6 weeks after your session. First touch-ups within 3 months are complimentary for our clients.",
+              },
+            },
+          ],
+        }),
+      },
     ],
   }),
   component: AftercarePage,
@@ -25,9 +81,12 @@ function AftercarePage() {
         <div className="text-[10px] font-semibold uppercase tracking-[0.3em] text-muted-foreground mb-6">
           Aftercare
         </div>
-        <h1 className="font-serif italic text-5xl md:text-6xl max-w-[16ch] leading-[0.95]">
-          Keep it clean. Keep it moisturized. Leave it alone.
+        <h1 className="font-serif italic text-5xl md:text-6xl max-w-[18ch] leading-[0.95]">
+          Tattoo Aftercare Instructions
         </h1>
+        <p className="mt-6 text-sm uppercase tracking-[0.25em] text-muted-foreground">
+          Keep it clean. Keep it moisturized. Leave it alone.
+        </p>
       </section>
 
       <section className="px-6 md:px-12 py-20 grid gap-12 md:gap-16">

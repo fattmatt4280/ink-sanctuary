@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TravelRouteImport } from './routes/travel'
 import { Route as StudioRouteImport } from './routes/studio'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
 import { Route as MerchRouteImport } from './routes/merch'
 import { Route as ContactRouteImport } from './routes/contact'
@@ -20,6 +21,7 @@ import { Route as ArtistsRouteImport } from './routes/artists'
 import { Route as AftercareRouteImport } from './routes/aftercare'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StudioIndexRouteImport } from './routes/studio.index'
+import { Route as StylesFineLineRouteImport } from './routes/styles.fine-line'
 import { Route as ArtistsSlugRouteImport } from './routes/artists.$slug'
 
 const TravelRoute = TravelRouteImport.update({
@@ -30,6 +32,11 @@ const TravelRoute = TravelRouteImport.update({
 const StudioRoute = StudioRouteImport.update({
   id: '/studio',
   path: '/studio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PortfolioRoute = PortfolioRouteImport.update({
@@ -77,6 +84,11 @@ const StudioIndexRoute = StudioIndexRouteImport.update({
   path: '/',
   getParentRoute: () => StudioRoute,
 } as any)
+const StylesFineLineRoute = StylesFineLineRouteImport.update({
+  id: '/styles/fine-line',
+  path: '/styles/fine-line',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ArtistsSlugRoute = ArtistsSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -92,9 +104,11 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/merch': typeof MerchRoute
   '/portfolio': typeof PortfolioRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/studio': typeof StudioRouteWithChildren
   '/travel': typeof TravelRoute
   '/artists/$slug': typeof ArtistsSlugRoute
+  '/styles/fine-line': typeof StylesFineLineRoute
   '/studio/': typeof StudioIndexRoute
 }
 export interface FileRoutesByTo {
@@ -106,8 +120,10 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/merch': typeof MerchRoute
   '/portfolio': typeof PortfolioRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/travel': typeof TravelRoute
   '/artists/$slug': typeof ArtistsSlugRoute
+  '/styles/fine-line': typeof StylesFineLineRoute
   '/studio': typeof StudioIndexRoute
 }
 export interface FileRoutesById {
@@ -120,9 +136,11 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/merch': typeof MerchRoute
   '/portfolio': typeof PortfolioRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/studio': typeof StudioRouteWithChildren
   '/travel': typeof TravelRoute
   '/artists/$slug': typeof ArtistsSlugRoute
+  '/styles/fine-line': typeof StylesFineLineRoute
   '/studio/': typeof StudioIndexRoute
 }
 export interface FileRouteTypes {
@@ -136,9 +154,11 @@ export interface FileRouteTypes {
     | '/contact'
     | '/merch'
     | '/portfolio'
+    | '/sitemap.xml'
     | '/studio'
     | '/travel'
     | '/artists/$slug'
+    | '/styles/fine-line'
     | '/studio/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -150,8 +170,10 @@ export interface FileRouteTypes {
     | '/contact'
     | '/merch'
     | '/portfolio'
+    | '/sitemap.xml'
     | '/travel'
     | '/artists/$slug'
+    | '/styles/fine-line'
     | '/studio'
   id:
     | '__root__'
@@ -163,9 +185,11 @@ export interface FileRouteTypes {
     | '/contact'
     | '/merch'
     | '/portfolio'
+    | '/sitemap.xml'
     | '/studio'
     | '/travel'
     | '/artists/$slug'
+    | '/styles/fine-line'
     | '/studio/'
   fileRoutesById: FileRoutesById
 }
@@ -178,8 +202,10 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   MerchRoute: typeof MerchRoute
   PortfolioRoute: typeof PortfolioRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StudioRoute: typeof StudioRouteWithChildren
   TravelRoute: typeof TravelRoute
+  StylesFineLineRoute: typeof StylesFineLineRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -196,6 +222,13 @@ declare module '@tanstack/react-router' {
       path: '/studio'
       fullPath: '/studio'
       preLoaderRoute: typeof StudioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/portfolio': {
@@ -261,6 +294,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudioIndexRouteImport
       parentRoute: typeof StudioRoute
     }
+    '/styles/fine-line': {
+      id: '/styles/fine-line'
+      path: '/styles/fine-line'
+      fullPath: '/styles/fine-line'
+      preLoaderRoute: typeof StylesFineLineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/artists/$slug': {
       id: '/artists/$slug'
       path: '/$slug'
@@ -302,8 +342,10 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   MerchRoute: MerchRoute,
   PortfolioRoute: PortfolioRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   StudioRoute: StudioRouteWithChildren,
   TravelRoute: TravelRoute,
+  StylesFineLineRoute: StylesFineLineRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
